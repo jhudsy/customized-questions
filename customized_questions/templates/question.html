@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
-</head>
-<body>
-  <div class="toparea">
-    <div class="studentidarea">
-       <form method="POST"> Student ID: {{ session['studentid'] }} <input type=submit text="changeid" value="Change ID" name="changeid"></form> 
-    </div>
-  </div>
+{% include "header.html" %}
 
   {{ q.get_question(studentid)|safe }}
   <form method="POST" action="{{ url_for('submission',assignment=a) }}">

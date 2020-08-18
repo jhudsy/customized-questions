@@ -29,7 +29,7 @@ def index():
   elif request.method == 'POST' and "studentid" not in session:
       session['studentid']=int(request.form['studentid'])
       return redirect(url_for('index'))
-  elif request.method == 'POST' and request.form['changeid']=="Change ID":
+  elif request.method == 'POST' and request.form['changeid']=="changeId":
       session.pop('studentid')
       return redirect(url_for('index'))
   else:
@@ -38,7 +38,6 @@ def index():
 
 @app.route('/<assignment>',methods=["POST","GET"])
 def show_assignment(assignment):
-  print(request.form)
   if request.method=='GET' and "studentid" not in session:
     return '''
       <form method="post">
@@ -49,7 +48,7 @@ def show_assignment(assignment):
   elif request.method == 'POST' and "studentid" not in session:
       session['studentid']=int(request.form['studentid'])
       return redirect(url_for('show_assignment',assignment=assignment))
-  elif request.method == 'POST' and request.form['changeid']=="Change ID":
+  elif request.method == 'POST' and request.form['changeid']=="changeId":
       session.pop('studentid')
       return redirect(url_for('show_assignment',assignment=assignment))
   else:
@@ -77,5 +76,5 @@ def submission(assignment):
            dw=csv.DictWriter(f,fieldnames=list(o.keys()))
            dw.writerow(o)
 
-     print(o)
+     #print(o)
      return 'Submission received'
