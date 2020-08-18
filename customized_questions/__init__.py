@@ -17,16 +17,12 @@ fl=glob.glob("customized_questions/questions/*py")
 for filename in fl:
   exec(compile(open(filename,"rb").read(),filename,'exec'))
 
+
 @app.route('/',methods=["POST","GET"])
 def index():
   if request.method=='GET' and "studentid" not in session:
-    return '''
-      <form method="post">
-      <p><input type=text name=studentid>
-      <input type=submit></p>
-      </form>
-    '''
-  elif request.method == 'POST' and "studentid" not in session:
+    return render_template('student_id_form.html')
+  elif request.method == 'POST' and "studentid" in request.form:
       session['studentid']=int(request.form['studentid'])
       return redirect(url_for('index'))
   elif request.method == 'POST' and request.form['changeid']=="changeId":
@@ -39,13 +35,8 @@ def index():
 @app.route('/<assignment>',methods=["POST","GET"])
 def show_assignment(assignment):
   if request.method=='GET' and "studentid" not in session:
-    return '''
-      <form method="post">
-      <p><input type=text name=studentid>
-      <input type=submit></p>
-      </form>
-    '''
-  elif request.method == 'POST' and "studentid" not in session:
+    return render_template('student_id_form.html')
+  elif request.method == 'POST' and "studentid" in request.form:
       session['studentid']=int(request.form['studentid'])
       return redirect(url_for('show_assignment',assignment=assignment))
   elif request.method == 'POST' and request.form['changeid']=="changeId":
