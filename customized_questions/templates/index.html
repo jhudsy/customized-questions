@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+</head>
+<body>
+  <div class="toparea">
+  <div class="studentidarea"> <form method="POST"> Student ID: {{ session['studentid'] }} <input type=submit text="Change ID" name="changeid" value="changeId"></form></div></div>
+
+  {% for a in q.questions|sort %}
+    <p><a href="{{ url_for('show_assignment',assignment=a) }}">{{a}}</a>
+  {% endfor %}
+
+</body>
+</html>
