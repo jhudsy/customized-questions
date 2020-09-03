@@ -46,6 +46,7 @@ To create a question, you need to create a `Question` object, e.g., as follows (
 
 ```
 Question("Add and multiply",qs,[set_values],{"add":check_add,"mult":check_multiply}
+```
 
 The file containing the question should be placed in the `/questions` sub-directory.
 
