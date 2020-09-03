@@ -52,6 +52,15 @@ The file containing the question should be placed in the `/questions` sub-direct
 
 ## Using the system
 
+### Configuration
+
+Create a config.ini file within the `config/` subdirectory. The system accepts the following parameters
+
+- `mark_file` the name and location of the marks file to write
+- `question_path` the path to the questions to be used
+- `secret_key` the Flask secret key to use
+- `public_key_file` the location of the public key to use for mark file encryption. A public/private key pair can be generated using the `make_key.py` script.
+
 Navigating into the system will ask for a student id before displaying anything. This can be changed by selecting "Change ID" in the top right of the site.
 
 Navigating to the root of the website will display all questions.
@@ -66,9 +75,15 @@ The format if the CSV file is as follows:
 - A dictionary containing the answer name and the value put in by the user
 - The time (using `time.time()`) the answer was submitted
 
+### Encryption
+
+The system encrypts the marks file so that even if a breach occurs, no information can be gained. You should keep the private key safe. To decrypt the marks file, use the `decrypt.py` script. Parameters for this script are (1) the private key file; (2) the location of the encrypted marks file; (3) the location to write the decrypted marks file to.
+
+
 ## TODO
 
 - lots of refactoring
 - integrate with LTI
 - Per course questions etc 
+- Nicer error handling and reporting (there isn't any right now)
 
