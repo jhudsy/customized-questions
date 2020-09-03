@@ -115,7 +115,7 @@ def submission(assignment):
      t=0
      for a in ans:
        t+=ans[a]
-     o={"question":assignment,"student_id":int(session['studentid']),"total_mark":t,"marks_breakdown":ans,"answers":request.form.to_dict(),"time":time.time()}
+     o={"question":assignment,"student_id":int(session['studentid']),"total_mark":t,"marks_breakdown":ans,"answers":request.form.to_dict(),"time":time.time(),"ip":request.remote_addr}
 
      write_result(o)
 
