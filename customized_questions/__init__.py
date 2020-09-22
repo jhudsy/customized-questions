@@ -4,6 +4,9 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+
 
 import base64
 import configparser
@@ -76,6 +79,17 @@ app.secret_key=SECRET_KEY
 fl=glob.glob(f"{QUESTIONPATH}/*py")
 for filename in fl:
   exec(compile(open(filename,"rb").read(),filename,'exec'))
+
+class QuestionsChanged(FileSystemEventHandler):
+  def on_any_event(self,event):
+    Question.questions={}
+    fl=glob.glob(f"{QUESTIONPATH}/*py")
+    for filename in fl:
+      exec(compile(open(filename,"rb").read(),filename,'exec'))
+
+observer=Observer()
+observer.schedule(QuestionsChanged(),path=QUESTIONPATH,recursive=False)
+observer.start()
 
 
 @app.route('/',methods=["POST","GET"])
