@@ -1,4 +1,5 @@
 import random
+import hashlib
 
 class Question:
   questions={}
@@ -13,7 +14,7 @@ class Question:
 
   def get_question(self,studentid):
     dict={}
-    random.seed(hash(studentid))
+    random.seed(int(hashlib.md5(studentid.encode('utf-8')).hexdigest(),16))
     for v in self.qv:
 	    v(dict)
     return self.qs.format(**dict)
@@ -21,7 +22,7 @@ class Question:
   def check_answers(self,studentid,answers):
     marks={}
     dict={}
-    random.seed(hash(studentid))
+    random.seed(int(hashlib.md5(studentid.encode('utf-8')).hexdigest(),16))
     for v in self.qv:
 	    v(dict)
 

@@ -16,7 +16,7 @@ import csv
 import glob
 import time
 import io
-from flask import Flask,url_for,Response,request,session,redirect,render_template
+from flask import Flask,url_for,Response,request,session,redirect,render_template,escape
 from customized_questions.question import Question
 
 def setup_encryption(key_file):
@@ -97,13 +97,13 @@ def index():
   if request.method=='GET' and "studentid" not in session:
     return render_template('student_id_form.html')
   elif request.method == 'POST' and "studentid" in request.form:
-      session['studentid']=int(request.form['studentid'])
+      session['studentid']=escape(request.form['studentid'].strip())
       return redirect(url_for('index'))
   elif request.method == 'POST' and request.form['changeid']=="change ID":
       session.pop('studentid')
       return redirect(url_for('index'))
   else:
-    return render_template('index.html',q=Question,studentid=int(session['studentid']))
+    return render_template('index.html',q=Question,studentid=session['studentid'])
 
 
 @app.route('/<assignment>',methods=["POST","GET"])
@@ -111,13 +111,13 @@ def show_assignment(assignment):
   if request.method=='GET' and "studentid" not in session:
     return render_template('student_id_form.html')
   elif request.method == 'POST' and "studentid" in request.form:
-      session['studentid']=int(request.form['studentid'])
+      session['studentid']=escape(request.form['studentid'].strip())
       return redirect(url_for('show_assignment',assignment=assignment))
   elif request.method == 'POST' and request.form['changeid']=="change ID":
       session.pop('studentid')
       return redirect(url_for('show_assignment',assignment=assignment))
   else:
-    return render_template('question.html',a=assignment,q=Question.questions[assignment],studentid=int(session['studentid']))
+    return render_template('question.html',a=assignment,q=Question.questions[assignment],studentid=session['studentid'])
 
 @app.route('/favicon.ico')
 def favicon():
@@ -125,11 +125,11 @@ def favicon():
 
 @app.route('/submission/<assignment>',methods=["POST"])
 def submission(assignment):
-     ans=Question.questions[assignment].check_answers(int(session['studentid']),request.form.to_dict())
+     ans=Question.questions[assignment].check_answers(session['studentid'],request.form.to_dict())
      t=0
      for a in ans:
        t+=ans[a]
-     o={"question":assignment,"student_id":int(session['studentid']),"total_mark":t,"marks_breakdown":ans,"answers":request.form.to_dict(),"time":time.time(),"ip":request.remote_addr}
+     o={"question":assignment,"student_id":session['studentid'],"total_mark":t,"marks_breakdown":ans,"answers":request.form.to_dict(),"time":time.time(),"ip":request.remote_addr}
 
      write_result(o)
 
