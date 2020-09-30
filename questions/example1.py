@@ -3,23 +3,23 @@ import random
 
 name="Q1"
 
-qs="What is (a) {a}+{b}; (b) {a}-{c}?"
+qs="What is (1a) {a}+{b}; (1b) {a}-{c}?"
 
-def a(dict):
+def set_values_1(dict):
   dict["a"]=random.randint(0,5)
 
-def b(dict):
+def set_values_2(dict): #illustrating that multiple methods can be called to set values
   dict["b"]=random.randint(6,10)
   dict["c"]=random.randint(11,15)
 
 def add(dict,answers):
-  return int(answers["a"])==(int(dict["a"])+int(dict["b"]))
+  return int(answers["1a"])==(int(dict["a"])+int(dict["b"]))
 
 def diff(dict,answers):
-  return int(answers["b"])==(int(dict["a"])-int(dict["c"]))
+  return int(answers["1b"])==(int(dict["a"])-int(dict["c"]))
 
-qv=(a,b)
-av={"a":add,"b":diff}
+qv=[set_values1,set_values_2]
+av={"1a":add,"1b":diff}
 
 Question(name,qs,qv,av)
 
