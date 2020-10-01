@@ -18,7 +18,7 @@ def add(dict,answers):
 def diff(dict,answers):
   return int(answers["1b"])==(int(dict["a"])-int(dict["c"]))
 
-qv=[set_values1,set_values_2]
+qv=[set_values_1,set_values_2]
 av={"1a":add,"1b":diff}
 
 Question(name,qs,qv,av)
