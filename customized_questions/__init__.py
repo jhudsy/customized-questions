@@ -1,12 +1,8 @@
-import cryptography
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import padding
+import nacl
+from nacl.public import PrivateKey,SealedBox,PublicKey
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-
 
 import base64
 import configparser
@@ -19,25 +15,22 @@ import io
 from flask import Flask,url_for,Response,request,session,redirect,render_template,escape
 from customized_questions.question import Question
 
+PUBLIC_KEY=None
+
 def setup_encryption(key_file):
   global PUBLIC_KEY
   if key_file=="":
      return
   with open(key_file,"rb") as kf:
-    PUBLIC_KEY=serialization.load_pem_public_key(kf.read(),backend=default_backend())
+    PUBLIC_KEY=PublicKey(kf.read(),encoder=nacl.encoding.Base64Encoder)
 
 
 """o is a dictionary of results"""
 def write_result(o):
 
      with lock:
-        #we don't really need to write the headers, TODO: remove?
-        #if not os.path.exists(MARKFILE):
-        #  with open(MARKFILE,'a') as f:
-        #    dw=csv.DictWriter(f,fieldnames=list(o.keys()))
-        #    dw.writeheader()
 
-        with open(MARKFILE,'a') as f:
+        with open(MARKFILE,'ab') as f:
            si=io.StringIO()
            dw=csv.DictWriter(si,fieldnames=list(o.keys()))
            dw.writerow(o)
@@ -46,20 +39,11 @@ def write_result(o):
            #si now contains the unencrypted string.
            if PUBLIC_KEY==None:
               print(si,file=f)
-              #f.writelines([si])
            else:
-              encrypted=PUBLIC_KEY.encrypt(
-                   str.encode(si),
-                   padding.OAEP(
-                     mgf=padding.MGF1(algorithm=hashes.SHA256()),
-                     algorithm=hashes.SHA256(),
-                     label=None
-                   )
-              )
-              print("".join(chr(x) for x in base64.b64encode(encrypted)),file=f) #turn into string
-              #f.writelines(["".join(chr(x) for x in base64.b64encode(encrypted))]) #turn into string
-
-
+              sb=SealedBox(PUBLIC_KEY)
+              enc=sb.encrypt(str.encode(si),encoder=nacl.encoding.Base64Encoder)
+              #print(enc,file=f) #turn into string
+              f.write(enc+b'\n')
 
 config=configparser.ConfigParser({'secret_key':'lkrj345asf/','mark_file':'marks/marks.csv','question_path':'questions/','public_key_file':""})
 config.read('config/config.ini')

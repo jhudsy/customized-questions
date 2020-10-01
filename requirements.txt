@@ -1,5 +1,5 @@
 flask>-1.1
 gunicorn>=0.14.2
-cryptography>=2.9.2
+pynacl>=1.4.0
 watchdog>=0.8.2
 networkx>=2.5
