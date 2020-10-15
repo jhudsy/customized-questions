@@ -12,6 +12,7 @@ import csv
 import glob
 import time
 import io
+import logging
 from flask import Flask,url_for,Response,request,session,redirect,render_template,escape
 from customized_questions.question import Question
 
@@ -38,19 +39,22 @@ def write_result(o):
            
            #si now contains the unencrypted string.
            if PUBLIC_KEY==None:
-              print(si,file=f)
+              f.write(str.encode(si)+b'\n')
            else:
               sb=SealedBox(PUBLIC_KEY)
               enc=sb.encrypt(str.encode(si),encoder=nacl.encoding.Base64Encoder)
-              #print(enc,file=f) #turn into string
               f.write(enc+b'\n')
 
-config=configparser.ConfigParser({'secret_key':'lkrj345asf/','mark_file':'marks/marks.csv','question_path':'questions/','public_key_file':""})
+config=configparser.ConfigParser({'secret_key':'lkrj345asf/','mark_file':'marks/marks.csv','question_path':'questions/','public_key_file':"",'log_level':"INFO"})
 config.read('config/config.ini')
 SECRET_KEY=str.encode(config.get('main','secret_key'))
 MARKFILE=config.get('main','mark_file')
 QUESTIONPATH=config.get('main','question_path')
 PUBLIC_KEY=None
+LOGLEVEL=config.get('main','log_level')
+LOGLEVEL=getattr(logging,LOGLEVEL.upper(),None)
+logging.basicConfig(level=LOGLEVEL)
+
 
 lock=threading.Lock()
 
@@ -58,6 +62,7 @@ setup_encryption(config.get('main','public_key_file'))
 
 app = Flask(__name__)
 app.secret_key=SECRET_KEY
+
 
 
 fl=glob.glob(f"{QUESTIONPATH}/*py")
@@ -109,7 +114,7 @@ def favicon():
 
 @app.route('/submission/<assignment>',methods=["POST"])
 def submission(assignment):
-     ans=Question.questions[assignment].check_answers(session['studentid'],request.form.to_dict())
+     ans=Question.questions[assignment].check_answers(session['studentid'],request.form.to_dict(),app)
      t=0
      for a in ans:
        t+=ans[a]

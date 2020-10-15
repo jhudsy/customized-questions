@@ -1,5 +1,7 @@
+import sys
 import random
 import hashlib
+import traceback
 
 class Question:
   questions={}
@@ -19,7 +21,7 @@ class Question:
 	    v(dict)
     return self.qs.format(**dict)
 
-  def check_answers(self,studentid,answers):
+  def check_answers(self,studentid,answers,app):
     marks={}
     dict={}
     random.seed(int(hashlib.md5(studentid.encode('utf-8')).hexdigest(),16))
@@ -32,7 +34,7 @@ class Question:
               if self.av[a](dict,answers):
                  marks[a]=1
             except:
-              pass
+              app.logger.debug(traceback.format_exc())
     return marks
 
 
