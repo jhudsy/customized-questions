@@ -115,10 +115,12 @@ def favicon():
 @app.route('/submission/<assignment>',methods=["POST"])
 def submission(assignment):
      ans=Question.questions[assignment].check_answers(session['studentid'],request.form.to_dict(),app)
+     if Question.questions[assignment].other_information!=None:
+        other_information=Question.questions[assignment].other_information(session['studentid'])
      t=0
      for a in ans:
        t+=ans[a]
-     o={"question":assignment,"student_id":session['studentid'],"total_mark":t,"marks_breakdown":ans,"answers":request.form.to_dict(),"time":time.time(),"ip":request.remote_addr}
+     o={"question":assignment,"student_id":session['studentid'],"total_mark":t,"marks_breakdown":ans,"answers":request.form.to_dict(),"other_information":other_information,"time":time.time(),"ip":request.remote_addr}
 
      write_result(o)
 
