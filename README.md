@@ -48,6 +48,8 @@ To create a question, you need to create a `Question` object, e.g., as follows (
 Question("Add and multiply",qs,[set_values],{"add":check_add,"mult":check_multiply}
 ```
 
+You can pass an optional final "info" function which will also be passed the dictionary of values, and which will also be logged to the CSV file. This can be used to - for example - record correct answers.
+
 The file containing the question should be placed in the `/questions` sub-directory.
 
 
@@ -74,6 +76,7 @@ The format if the CSV file is as follows:
 - total marks obtained for the question (assuming equal weighted marks for each answer)
 - A dictionary containing the answer name and 1/0 depending if the user got the answer correct or not
 - A dictionary containing the answer name and the value put in by the user
+- The output of the "info" function (if the function exists).
 - The time (using `time.time()`) the answer was submitted
 
 ### Encryption
