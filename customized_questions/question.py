@@ -2,6 +2,7 @@ import sys
 import random
 import hashlib
 import traceback
+import numpy as np
 
 class Question:
   questions={}
@@ -18,6 +19,7 @@ class Question:
   def get_question(self,studentid):
     dict={}
     random.seed(int(hashlib.md5(studentid.encode('utf-8')).hexdigest(),16))
+    np.random.seed(int(hashlib.md5('123'.encode('utf-8')).hexdigest(),16)%(2**32-1))
     for v in self.qv:
 	    v(dict)
     return self.qs.format(**dict)
