@@ -7,7 +7,7 @@ import numpy as np
 class Question:
   questions={}
 
-  def __init__(self,name,question_string,question_values,answer_values,info=None):
+  def __init__(self,name,question_string,question_values,answer_values,marks_dict=None,info=None):
     """question string is a formatted string. question_values are a set of functions taking in a dictionary; they update the dictionary so as to set values to parameters in the question string. answer_values is a dict of string->functions which take the question parameter dict in and an answer dict. The function should return true if answer[string] is correct. info is a function which can be used to - for example - log expected answers. It should return whatever needs to be logged, and is passed a dict in. The entire answer dict is passed in so as to allow building on incorrect answers."""
 
     self.qs=question_string
@@ -15,6 +15,7 @@ class Question:
     self.av=answer_values
     self.questions[name]=self
     self.oi=info
+    self.marks_dict=marks_dict
 
   def get_question(self,studentid):
     dict={}
@@ -36,7 +37,10 @@ class Question:
             marks[a]=0
             try:
               if self.av[a](dict,answers):
-                 marks[a]=1
+                 if self.marks_dict==None:
+                    marks[a]=1
+                 else:
+                    marks[a]=self.marks_dict[a]
             except:
               app.logger.debug(traceback.format_exc())
     return marks
