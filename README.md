@@ -48,6 +48,8 @@ To create a question, you need to create a `Question` object, e.g., as follows (
 Question("Add and multiply",qs,[set_values],{"add":check_add,"mult":check_multiply}
 ```
 
+You can pass an optional marks_dict dictionary mapping subquestion names to numbers. These will be the marks assigned to that subquestion.
+
 You can pass an optional final "info" function which will also be passed the dictionary of values, and which will also be logged to the CSV file. This can be used to - for example - record correct answers.
 
 The file containing the question should be placed in the `/questions` sub-directory.
@@ -73,7 +75,7 @@ Selecting a question will display it and provide a form where answers can be sub
 The format if the CSV file is as follows:
 - Question (by name)
 - student id of the submitter
-- total marks obtained for the question (assuming equal weighted marks for each answer)
+- total marks obtained for the question
 - A dictionary containing the answer name and 1/0 depending if the user got the answer correct or not
 - A dictionary containing the answer name and the value put in by the user
 - The output of the "info" function (if the function exists).
