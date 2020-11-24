@@ -25,4 +25,4 @@ def set_values(dict):
 def q1(dict,answers):
   return int(answers["Q1"])==dict["nodes"]
 
-Question(name,qs,[set_values],{"Q1":q1})
+Question(name,qs,[set_values],{"Q1":q1},marks_dict={"Q1":5})
