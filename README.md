@@ -34,11 +34,13 @@ Finally, multiple value initialisers are possible, and these will be passed as a
 
 Multiple answer checkers are possible. These are passed in via a dictionary and displayed based on the dictionary key. Each function is passed in the dictionary used to generate the question, as well as a dictionary containing the user's answer. E.g.,
 
+```
 def check_add(dict,answers):
   return int(answers["add"])==(int(dict["x"])+int(dict["y"]))
 
 def check_multiply(dict,answers):
   return int(answers["mult"])==(int(dict["x"])*int(dict["y"]))
+```
 
 ### Putting it all together
 
@@ -48,7 +50,7 @@ To create a question, you need to create a `Question` object, e.g., as follows (
 Question("Add and multiply",qs,[set_values],{"add":check_add,"mult":check_multiply}
 ```
 
-You can pass an optional marks_dict dictionary mapping subquestion names to numbers. These will be the marks assigned to that subquestion.
+You can pass an optional `marks_dict` dictionary mapping subquestion names to numbers. These will be the marks assigned to that subquestion.
 
 You can pass an optional final "info" function which will also be passed the dictionary of values, and which will also be logged to the CSV file. This can be used to - for example - record correct answers.
 
